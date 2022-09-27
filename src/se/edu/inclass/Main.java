@@ -15,14 +15,20 @@ public class Main {
         DataManager dm = new DataManager("./data/data.txt");
         ArrayList<Task> tasksData = dm.loadData();
 
-        System.out.println("Printing deadlines");
-        printDeadlines(tasksData);
+        // printData(tasksData);
+        // printDataUsingStream(tasksData);
+
+        // System.out.println("Printing deadlines");
+        // printDeadlines(tasksData);
+        // printDeadlinesUsingStreams(tasksData);
 
         System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
+        System.out.println("Total number of deadlines: " + countDeadlinesUsingStreams(tasksData));
 
     }
 
     private static int countDeadlines(ArrayList<Task> tasksData) {
+        System.out.println("Calculating count of deadlines using loops");
         int count = 0;
         for (Task t : tasksData) {
             if (t instanceof Deadline) {
@@ -32,17 +38,42 @@ public class Main {
         return count;
     }
 
+    private static int countDeadlinesUsingStreams(ArrayList<Task> tasks) {
+        System.out.println("Calculating count of deadlines using streams");
+        int count = (int) tasks.stream()
+                .filter((t) -> t instanceof Deadline) // predicate
+                .count();
+
+        return count;
+    }
+
     public static void printData(ArrayList<Task> tasksData) {
+        System.out.println("Printing data by looping");
         for (Task t : tasksData) {
             System.out.println(t);
         }
     }
 
+    public static void printDataUsingStream(ArrayList<Task> tasks) {
+        System.out.println("Printing data using stream");
+        tasks.stream() // convert data to stream
+                .forEach(System.out::println); // terminal operator
+    }
+        
+
     public static void printDeadlines(ArrayList<Task> tasksData) {
+        System.out.println("Printing deadlines using loop");
         for (Task t : tasksData) {
             if (t instanceof Deadline) {
                 System.out.println(t);
             }
         }
+    }
+
+    public static void printDeadlinesUsingStreams(ArrayList<Task> tasks) {
+        System.out.println("Printing deadlines using stream");
+        tasks.parallelStream()
+                .filter((t) -> t instanceof Deadline) // intermediate operation
+                .forEach(System.out::println); // terminal operation
     }
 }
